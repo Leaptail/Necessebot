@@ -5,7 +5,7 @@ import cv2 as cv
 import random
 import numpy as np
 
-haystack_img = cv.imread('Tempmem/farm.PNG', cv.IMREAD_UNCHANGED)
+haystack_img = cv.imread('farm.PNG', cv.IMREAD_UNCHANGED)
 needle_img = cv.imread('memories/Tree/Tree1.PNG', cv.IMREAD_UNCHANGED)
 
 result = cv.matchTemplate(haystack_img, needle_img, cv.TM_CCOEFF_NORMED)
@@ -18,3 +18,23 @@ min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
 
 print('%s' %str(max_loc))
 print('%s' %str(max_val))
+
+threshold = 0.8
+if max_val >= threshold:
+    print('found')
+
+    #get dimension of needle image
+    needle_w = needle_img.shape[1]
+    needle_h = needle_img.shape[0]
+
+    top_left = max_loc
+    bottom_right = (top_left[0] + needle_w, top_left[1] + needle_h)
+
+    cv.rectangle(haystack_img, top_left, bottom_right, color=(255,0,0), thickness=2, lineType=cv.LINE_4)
+    print('%d , %d' % top_left, bottom_right)
+
+    cv.imshow('Result', haystack_img)
+    cv.waitKey()
+
+else:
+    print('none')
